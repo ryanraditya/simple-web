@@ -1,0 +1,28 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to VPS via SSH (Password Auth)
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cd simple-web || exit
+            git pull
+            sudo docker build -t webapp .
+            sudo docker stop webapp || true
+            sudo docker rm webapp || true
+            sudo docker run -d --name webapp -p 80:80 webapp
