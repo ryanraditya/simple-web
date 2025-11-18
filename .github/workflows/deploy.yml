@@ -13,16 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to VPS via SSH (Password Auth)
+      - name: Deploy to VPS via SSH Key
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
+          key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd simple-web || exit
             git pull
             sudo docker build -t webapp .
             sudo docker stop webapp || true
-            sudo docker rm webapp || true
-            sudo docker run -d --name webapp -p 80:80 webapp
+            sudo docker rm webapp || tr
+
