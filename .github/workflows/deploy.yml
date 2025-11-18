@@ -19,10 +19,13 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
           script: |
-            cd simple-web || exit
+            cd /home/bnsp15/simple-web || exit
             git pull
+
             sudo docker build -t webapp .
             sudo docker stop webapp || true
-            sudo docker rm webapp || tr
+            sudo docker rm webapp || true
+            sudo docker run -d --name webapp -p 80:80 webapp
 
